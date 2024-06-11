@@ -41,9 +41,11 @@ public class AuthController {
     SecurityContextHolder.getContext().setAuthentication(authentication);
 
     UserAuth userDetails = (UserAuth) authentication.getPrincipal();
-
-
-    log.info("Token requested for user :" + userDetails.getUsername() + " with roles: " + userDetails.getAuthorities().toString());
+//    Get logged-in user's role
+//    userDetails.getAuthorities().forEach(authority -> {
+//      log.info(authority.getAuthority());
+//    });
+    log.info("Token requested for user :" + userDetails.getUsername() + " with roles: " + userDetails.getAuthorities().toArray()[0]);
     String token = authService.generateToken(authentication);
 
     LoginResponseDto response = new LoginResponseDto();

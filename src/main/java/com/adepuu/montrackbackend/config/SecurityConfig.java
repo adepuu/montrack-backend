@@ -63,6 +63,8 @@ public class SecurityConfig {
               auth.requestMatchers("/error/**").permitAll();
               auth.requestMatchers("/api/v1/auth/**").permitAll();
               auth.requestMatchers("/api/v1/users/register").permitAll();
+//              You can add specific role access limiter like this one below
+//              auth.requestMatchers("api/v1/wallet/admin/**").hasRole("ADMIN");
               auth.anyRequest().authenticated();
             })
             .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
