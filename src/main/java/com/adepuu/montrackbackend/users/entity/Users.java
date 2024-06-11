@@ -1,9 +1,13 @@
 package com.adepuu.montrackbackend.users.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
@@ -12,23 +16,25 @@ import java.time.Instant;
 @Setter
 @Entity
 @Table(name = "users", schema = "montrack")
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Users {
   @Id
-  @ColumnDefault("nextval('montrack.users_id_seq'::regclass)")
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "montrack.users_id_gen")
+  @SequenceGenerator(name = "montrack.users_id_gen", sequenceName = "montrack.users_id_seq", allocationSize = 1)
   @Column(name = "id", nullable = false)
   private Long id;
-
-  @NotNull
-  @Column(name = "username", nullable = false, length = Integer.MAX_VALUE)
-  private String username;
 
   @Size(max = 150)
   @NotNull
   @Column(name = "email", nullable = false, length = 150)
   private String email;
+
+  @JsonIgnore
+  @Size(max = 100)
+  @NotNull
+  @Column(name = "password", nullable = false, length = 100)
+  private String password;
 
   @Size(max = 255)
   @Column(name = "display_name")
@@ -41,6 +47,12 @@ public class Users {
   @Size(max = 150)
   @Column(name = "quotes", length = 150)
   private String quotes;
+
+  @NotNull
+  @ColumnDefault("1")
+  @Column(name = "active_currency", nullable = false)
+  private int activeCurrency;
+
 
   @NotNull
   @ColumnDefault("CURRENT_TIMESTAMP")

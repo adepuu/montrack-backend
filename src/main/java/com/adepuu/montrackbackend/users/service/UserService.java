@@ -6,9 +6,15 @@ import com.adepuu.montrackbackend.users.entity.Users;
 import java.util.List;
 
 public interface UserService {
-    Users register(RegisterRequestDto user);
-    Users findByUsername(String username);
-    Users findById(Long id);
-    List<Users> findAll();
-    void deleteById(Long id);
+  Users register(RegisterRequestDto user);
+
+  Users findByEmail(String email);
+
+  Users findById(Long id);
+
+  List<Users> findAll();
+
+  void deleteById(Long id);
+
+  Users profile();
 }
