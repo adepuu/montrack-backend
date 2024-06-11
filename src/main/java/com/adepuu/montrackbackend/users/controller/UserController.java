@@ -1,11 +1,11 @@
 package com.adepuu.montrackbackend.users.controller;
 
 import com.adepuu.montrackbackend.responses.Response;
+import com.adepuu.montrackbackend.users.dto.RegisterRequestDto;
 import com.adepuu.montrackbackend.users.service.UserService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -14,6 +14,11 @@ public class UserController {
 
   public UserController(UserService userService) {
     this.userService = userService;
+  }
+
+  @PostMapping("/register")
+  public ResponseEntity<Response<Object>> register(@Validated @RequestBody RegisterRequestDto registerRequestDto) {
+    return Response.success("User registered successfully", userService.register(registerRequestDto));
   }
 
   @GetMapping("/profile")
