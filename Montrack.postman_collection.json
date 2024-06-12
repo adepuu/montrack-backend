@@ -1,0 +1,99 @@
+{
+  "info": {
+    "_postman_id": "3efd3460-5523-48b1-9183-5df091884176",
+    "name": "Montrack",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "4925962"
+  },
+  "item": [
+    {
+      "name": "USERS",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Abang Sally\",\r\n    \"email\": \"bang.sally@gmail.com\",\r\n    \"password\": \"1234567890\",\r\n    \"activeCurrency\": 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}users/register",
+              "host": [
+                "{{base_url}}users"
+              ],
+              "path": [
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Profile",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJzZWxmIiwic3ViIjoiYWRlcHV0cmFuczJAZ21haWwuY29tIiwiZXhwIjoxNzE4MTc4NDk4LCJpYXQiOjE3MTgxNDI0OTgsInNjb3BlIjoiUk9MRV9VU0VSIn0.Xrqp_FdIa3CCFbvQioj7KdJ96qx3BQhMY0PjkRW4GmQHLJzlq6_tmIz6fuE1Q71BRwsPPmhA68zCtpaDVuHeymNbYnh9EqWjFxIk79jq0qaevlYdDxxaHOZ6E4OeB-cRLeeJL01ajGbeFQBuMvTY_5cT_jGL6_bTucgwXlKlgLrhuFERZO12AuiE-sobjTsfTQh-8iIhw-qZVqPEao7QtBZ86RaDU2Y7IZ4l-2Ywf4wS-2hAyoiFGd0Igqdk0asCora0twxDhjR0-pJuA9Mes8aFGJt0AABGMNbfJE4ODv1ktaxb9JoBENR974V_oaf73x2oMKXhLPKZIkmW1fTxIg",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}users/profile",
+              "host": [
+                "{{base_url}}users"
+              ],
+              "path": [
+                "profile"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "AUTH",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"bang.sally@gmail.com\",\r\n    \"password\": \"1234567890\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}auth/login",
+              "host": [
+                "{{base_url}}auth"
+              ],
+              "path": [
+                "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
