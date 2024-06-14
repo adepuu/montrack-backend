@@ -1,8 +1,10 @@
 package com.adepuu.montrackbackend.users.controller;
 
+import com.adepuu.montrackbackend.auth.helpers.Claims;
 import com.adepuu.montrackbackend.responses.Response;
 import com.adepuu.montrackbackend.users.dto.RegisterRequestDto;
 import com.adepuu.montrackbackend.users.service.UserService;
+import jakarta.annotation.security.RolesAllowed;
 import lombok.extern.java.Log;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,12 +30,15 @@ public class UserController {
     return Response.success("User registered successfully", userService.register(registerRequestDto));
   }
 
+  @RolesAllowed(
+            value = {"ROLE_USER", "ROLE_ADMIN"}
+  )
   @GetMapping("/profile")
   public ResponseEntity<?> profile() {
-    SecurityContext context = SecurityContextHolder.getContext();
-    Authentication authentication = context.getAuthentication();
-    String username = authentication.getName();
-    log.info("User profile requested for user: " + username);
-    return Response.success("User profile", userService.findByEmail(username));
+    var claims = Claims.getClaimsFromJwt();
+    var email = (String) claims.get("sub");
+    log.info("Claims are: " + claims.toString());
+    log.info("User profile requested for user: " + email);
+    return Response.success("User profile", userService.findByEmail(email));
   }
 }

@@ -61,7 +61,7 @@ public class SecurityConfig {
             .cors(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> {
               auth.requestMatchers("/error/**").permitAll();
-              auth.requestMatchers("/api/v1/auth/**").permitAll();
+              auth.requestMatchers("/api/v1/auth/login").permitAll();
               auth.requestMatchers("/api/v1/users/register").permitAll();
 //              You can add specific role access limiter like this one below
 //              auth.requestMatchers("api/v1/wallet/admin/**").hasRole("ADMIN");
