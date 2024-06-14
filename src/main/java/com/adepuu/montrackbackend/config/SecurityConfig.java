@@ -7,6 +7,8 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.java.Log;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +29,8 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -68,7 +72,22 @@ public class SecurityConfig {
               auth.anyRequest().authenticated();
             })
             .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .oauth2ResourceServer((oauth2) -> oauth2.jwt((jwt) -> jwt.decoder(jwtDecoder())))
+            .oauth2ResourceServer((oauth2) -> {
+              oauth2.jwt((jwt) -> jwt.decoder(jwtDecoder()));
+              oauth2.bearerTokenResolver((request) -> {
+//                This is where you can get the token from the cookie
+//                By default, it gets the token from the Authorization header
+//                Read more here https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/oauth2/server/resource/web/BearerTokenResolver.html
+                Cookie[] cookies = request.getCookies();
+                log.info("Cookies sent: " + Arrays.toString(cookies));
+                  for (Cookie cookie : cookies) {
+                      if ("sid".equals(cookie.getName())) {
+                          return cookie.getValue();
+                      }
+                  }
+                  return null;
+              });
+            })
             .userDetailsService(userDetailsService)
             .httpBasic(Customizer.withDefaults())
             .build();
@@ -82,7 +101,6 @@ public class SecurityConfig {
   @Bean
   JwtEncoder jwtEncoder() {
     JWK jwk = new RSAKey.Builder(rsaKeyConfigProperties.publicKey()).privateKey(rsaKeyConfigProperties.privateKey()).build();
-
     JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
     return new NimbusJwtEncoder(jwks);
   }
