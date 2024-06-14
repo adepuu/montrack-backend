@@ -5,7 +5,10 @@ import com.adepuu.montrackbackend.auth.dto.LoginResponseDto;
 import com.adepuu.montrackbackend.auth.entity.UserAuth;
 import com.adepuu.montrackbackend.auth.service.AuthService;
 import com.adepuu.montrackbackend.responses.Response;
+import jakarta.servlet.http.Cookie;
 import lombok.extern.java.Log;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -38,19 +41,21 @@ public class AuthController {
                     .authenticate(new UsernamePasswordAuthenticationToken(
                             userLogin.getEmail(),
                             userLogin.getPassword()));
-    SecurityContextHolder.getContext().setAuthentication(authentication);
+
+    var ctx = SecurityContextHolder.getContext();
+    ctx.setAuthentication(authentication);
 
     UserAuth userDetails = (UserAuth) authentication.getPrincipal();
-//    Get logged-in user's role
-//    userDetails.getAuthorities().forEach(authority -> {
-//      log.info(authority.getAuthority());
-//    });
     log.info("Token requested for user :" + userDetails.getUsername() + " with roles: " + userDetails.getAuthorities().toArray()[0]);
     String token = authService.generateToken(authentication);
 
     LoginResponseDto response = new LoginResponseDto();
     response.setMessage("User logged in successfully");
     response.setToken(token);
-    return Response.success(response.getMessage(), response);
+
+    Cookie cookie = new Cookie("sid", token);
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("Set-Cookie", cookie.getName() + "=" + cookie.getValue() + "; Path=/; HttpOnly");
+    return ResponseEntity.status(HttpStatus.OK).headers(headers).body(response);
   }
 }
