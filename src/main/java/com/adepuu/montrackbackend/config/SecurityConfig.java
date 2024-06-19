@@ -30,8 +30,6 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
-import java.util.Arrays;
-
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -67,25 +65,24 @@ public class SecurityConfig {
               auth.requestMatchers("/error/**").permitAll();
               auth.requestMatchers("/api/v1/auth/login").permitAll();
               auth.requestMatchers("/api/v1/users/register").permitAll();
-//              You can add specific role access limiter like this one below
-//              auth.requestMatchers("api/v1/wallet/admin/**").hasRole("ADMIN");
               auth.anyRequest().authenticated();
             })
             .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .oauth2ResourceServer((oauth2) -> {
               oauth2.jwt((jwt) -> jwt.decoder(jwtDecoder()));
               oauth2.bearerTokenResolver((request) -> {
-//                This is where you can get the token from the cookie
-//                By default, it gets the token from the Authorization header
-//                Read more here https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/oauth2/server/resource/web/BearerTokenResolver.html
+                // This is where you can get the token from the cookie
+                // By default, it gets the token from the Authorization header
+                // Read more here https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/oauth2/server/resource/web/BearerTokenResolver.html
                 Cookie[] cookies = request.getCookies();
-                log.info("Cookies sent: " + Arrays.toString(cookies));
+                if (cookies != null) {
                   for (Cookie cookie : cookies) {
-                      if ("sid".equals(cookie.getName())) {
-                          return cookie.getValue();
-                      }
+                    if ("sid".equals(cookie.getName())) {
+                      return cookie.getValue();
+                    }
                   }
-                  return null;
+                }
+                return null;
               });
             })
             .userDetailsService(userDetailsService)

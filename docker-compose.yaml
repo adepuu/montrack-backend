@@ -1,0 +1,10 @@
+services:
+    backend-app:
+        container_name: montrack-backend-app
+        build:
+            context: .
+            dockerfile: Dockerfile
+        env_file:
+            - .env
+        ports:
+            - "8081:${APP_PORT}"
