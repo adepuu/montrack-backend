@@ -62,6 +62,8 @@ public class TrxServiceImpl implements TrxService  {
                     final ExchangeResponse resp = this.currencyExchangeStub.getExchangeAmount(request);
                     log.info("Converted to " + user.getCurrency().getName() + " " + resp.getExchangedAmount());
                     BigDecimal exchangedAmount = BigDecimal.valueOf(resp.getExchangedAmount());
+
+
                     response.setValue(exchangedAmount);
                     response.setCurrency(user.getCurrency().getName());
                 } catch (final StatusRuntimeException e) {
