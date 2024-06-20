@@ -1,6 +1,10 @@
 package com.adepuu.montrackbackend.users.service.impl;
 
+import com.adepuu.montrackbackend.auth.helpers.Claims;
+import com.adepuu.montrackbackend.currency.entity.Currency;
+import com.adepuu.montrackbackend.currency.repository.CurrencyRepo;
 import com.adepuu.montrackbackend.exceptions.ApplicationException;
+import com.adepuu.montrackbackend.exceptions.DataNotFoundException;
 import com.adepuu.montrackbackend.users.dto.RegisterRequestDto;
 import com.adepuu.montrackbackend.users.entity.Users;
 import com.adepuu.montrackbackend.users.repository.UserRepository;
@@ -13,18 +17,23 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
   private final UserRepository userRepository;
+  private final CurrencyRepo currencyRepo;
   private final PasswordEncoder passwordEncoder;
 
-  public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+  public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, CurrencyRepo currencyRepo) {
     this.userRepository = userRepository;
     this.passwordEncoder = passwordEncoder;
+    this.currencyRepo = currencyRepo;
   }
 
   @Override
   public Users register(RegisterRequestDto user) {
     Users newUser = user.toEntity();
+    Currency currency = currencyRepo.findById(user.getActiveCurrency()).orElseThrow(() -> new DataNotFoundException("Currency not found"));
+    currency.setId(user.getActiveCurrency());
     var password = passwordEncoder.encode(user.getPassword());
     newUser.setPassword(password);
+    newUser.setCurrency(currency);
     return userRepository.save(newUser);
   }
 
@@ -50,6 +59,8 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public Users profile() {
-    return null;
+    var claims = Claims.getClaimsFromJwt();
+    var email = (String) claims.get("sub");
+    return findByEmail(email);
   }
 }

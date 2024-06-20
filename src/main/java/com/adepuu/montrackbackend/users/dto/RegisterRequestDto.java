@@ -26,7 +26,6 @@ public class RegisterRequestDto {
     user.setDisplayName(name);
     user.setEmail(email);
     user.setPassword(password);
-    user.setActiveCurrency(activeCurrency);
     return user;
   }
 }

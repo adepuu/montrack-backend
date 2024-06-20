@@ -1,5 +1,6 @@
 package com.adepuu.montrackbackend.users.entity;
 
+import com.adepuu.montrackbackend.currency.entity.Currency;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -48,11 +49,12 @@ public class Users {
   @Column(name = "quotes", length = 150)
   private String quotes;
 
+  @JsonIgnore
   @NotNull
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @ColumnDefault("1")
-  @Column(name = "active_currency", nullable = false)
-  private int activeCurrency;
-
+  @JoinColumn(name = "active_currency", nullable = false)
+  private Currency currency;
 
   @NotNull
   @ColumnDefault("CURRENT_TIMESTAMP")
