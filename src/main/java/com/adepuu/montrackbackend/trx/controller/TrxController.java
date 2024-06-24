@@ -3,6 +3,7 @@ package com.adepuu.montrackbackend.trx.controller;
 import com.adepuu.montrackbackend.auth.helpers.Claims;
 import com.adepuu.montrackbackend.responses.Response;
 import com.adepuu.montrackbackend.trx.service.TrxService;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

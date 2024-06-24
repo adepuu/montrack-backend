@@ -30,6 +30,11 @@ public class UserController {
     return Response.success("User registered successfully", userService.register(registerRequestDto));
   }
 
+  @PutMapping("/profile/update")
+  public ResponseEntity<?> updateProfile(@RequestBody RegisterRequestDto updateRequestDto) {
+    return Response.success("User profile updated successfully", userService.updateProfile(updateRequestDto));
+  }
+
   @RolesAllowed(
             value = {"ROLE_USER", "ROLE_ADMIN"}
   )

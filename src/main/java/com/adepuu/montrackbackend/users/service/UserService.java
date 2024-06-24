@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface UserService {
   Users register(RegisterRequestDto user);
+  Users updateProfile(RegisterRequestDto user);
 
   Users findByEmail(String email);
 

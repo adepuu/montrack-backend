@@ -9,6 +9,8 @@ import com.adepuu.montrackbackend.users.dto.RegisterRequestDto;
 import com.adepuu.montrackbackend.users.entity.Users;
 import com.adepuu.montrackbackend.users.repository.UserRepository;
 import com.adepuu.montrackbackend.users.service.UserService;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +40,23 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  @CachePut(value = "User", key = "#user.email")
+  public Users updateProfile(RegisterRequestDto user) {
+    Users existingUser = profile();
+
+    // if currency changed, update it
+    if (existingUser.getCurrency().getId() != user.getActiveCurrency()) {
+      Currency currency = currencyRepo.findById(user.getActiveCurrency()).orElseThrow(() -> new DataNotFoundException("Currency not found"));
+      currency.setId(user.getActiveCurrency());
+      existingUser.setCurrency(currency);
+    }
+    existingUser.setDisplayName(user.getName());
+
+    return userRepository.save(existingUser);
+  }
+
+  @Override
+  @Cacheable(value = "User", key = "#email")
   public Users findByEmail(String email) {
     return userRepository.findByEmail(email).orElseThrow(() -> new ApplicationException("User not found"));
   }

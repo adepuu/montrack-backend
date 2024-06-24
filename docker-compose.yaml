@@ -1,4 +1,9 @@
 services:
+    redis-cache:
+        image: redis:alpine
+        container_name: montrack-redis-cache
+        ports:
+            -   "6379:6379"
     backend-app:
         container_name: montrack-backend-app
         build:

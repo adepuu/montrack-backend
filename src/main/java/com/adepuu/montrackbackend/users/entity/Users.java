@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.io.Serializable;
 import java.time.Instant;
 
 @Getter
@@ -19,7 +20,7 @@ import java.time.Instant;
 @Table(name = "users", schema = "montrack")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Users {
+public class Users implements Serializable {
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "montrack.users_id_gen")
   @SequenceGenerator(name = "montrack.users_id_gen", sequenceName = "montrack.users_id_seq", allocationSize = 1)

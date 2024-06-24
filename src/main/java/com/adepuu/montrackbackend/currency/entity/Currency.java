@@ -10,13 +10,14 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.io.Serializable;
 import java.time.Instant;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "currency", schema = "montrack")
-public class Currency {
+public class Currency implements Serializable  {
     @Id
     @ColumnDefault("nextval('montrack.currencies_id_seq'::regclass)")
     @Column(name = "id", nullable = false)

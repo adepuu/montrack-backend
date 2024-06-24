@@ -11,6 +11,7 @@ import com.adepuu.montrackbackend.users.service.UserService;
 import io.grpc.StatusRuntimeException;
 import lombok.extern.java.Log;
 import net.devh.boot.grpc.client.inject.GrpcClient;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -36,6 +37,7 @@ public class TrxServiceImpl implements TrxService  {
     }
 
     @Override
+    @Cacheable(value = "TransactionDetailResponse", key = "#id", unless = "#result.currency == 'idr'")
     public TransactionDetailResponse getTransactionDetail(Long id) {
         var user = userService.profile();
         log.info("User's display currency : " + user.getCurrency().getName());
